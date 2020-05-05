@@ -10,4 +10,5 @@ autoload:
     path: CLI.lua
 require:
   - name: Wolf2789/Debug
-    source: local
+  - name: Wolf2789/spairs
+  - name: Wolf2789/switch
