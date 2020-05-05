@@ -234,26 +234,49 @@ return {
 
     printCommands = function(self)
         local result = {}
+        local longest = 0
         for command, data in spairs(self.commands) do
-            table.insert(result, '\t' .. command .. '\t\t' .. tostring(data[1]))
+            if #command > longest then
+                longest = #command
+            end
         end
-        return table.concat(result, '\n')
+        longest = longest + 4
+        for command, data in spairs(self.commands) do
+            local indent = ''
+            for i=0,(longest-#command) do
+                indent = indent .. ' '
+            end
+            table.insert(result, '    ' .. command .. indent .. tostring(data[1]))
+        end
+        return '\n' .. table.concat(result, '\n')
     end,
 
     printOptions = function(self)
         local result = {}
         local longest = 0
         for option, data in spairs(self.options) do
-            if #option > longest then
-                longest = #option
+            local length = #option
+            if data.alias then
+                length = length + 2 + #data.alias
+            end
+            if length > longest then
+                longest = length
             end
         end
+        longest = longest + 5
         for option, data in spairs(self.options) do
-            local indent = ''
-            for i=0,(longest-#option) do
+            local text = '--' .. option
+            if data.alias then
+                text = text .. ', -' .. data.alias
+            end
+            for i=0,(longest-#text) do
+                text = text .. ' '
+            end
+            local indent = '    '
+            for i=0,longest do
                 indent = indent .. ' '
             end
-            table.insert(result, '\t--' .. option .. indent .. '[' .. type(data.default) .. ']\t' .. data.description)
+            table.insert(result, '\n    ' .. text .. data.description:gsub('\t', indent) .. '\n' .. indent .. 'type: ' .. type(data.default) .. '\tdefault: ' .. tostring(data.default))
         end
         return table.concat(result, '\n')
     end,
