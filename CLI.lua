@@ -1,12 +1,13 @@
 --[[ Command line interface wrapper ]]
 return {
-    executable = 'program', -- name of the running program
+    name = 'Program', -- name of the running program
+    executable = 'program', -- path to the running program
     version = '1.0', -- version of the running program
 
     args = {}, -- this gets overwritten
     --[[
         It is advised to overwrite 'help', 'commands' and 'options' tables later in the code, eg.:
-        local CLI = require'CLI'
+        local CLI = require 'CLI'
         CLI.options = ...
         CLI.help = ...
         CLI.commands = ...
@@ -227,9 +228,7 @@ return {
     end,
 
     printVersion = function(self)
-        local executable = self.executable:match('^[.]?[^.]+')
-        executable = executable:sub(1,1):upper() .. executable:sub(2)
-        io.write(executable .. ' v'.. tostring(self.version) .. '\n')
+        io.write(tostring(self.name) .. ' v'.. tostring(self.version) .. '\n')
     end,
 
     printCommands = function(self)
